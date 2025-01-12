@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Prevent rewrites for requests already under /public
+RewriteCond %{REQUEST_URI} !^/public/
+
+# Rewrite all other requests to /public
+RewriteRule .* /public/ [L]
+
+# Use index.php as the default file
+DirectoryIndex index.php
