@@ -15,9 +15,19 @@ class QueryResolver
       'name' => 'Query',
       'fields' => [
         'categories' => [
-          'type' => Type::listOf(Type::string()),
-          'resolve' => [self::class, 'resolveCategories'],
+          'type' => Type::listOf(new ObjectType([
+            'name' => 'Category',
+            'fields' => [
+              'id' => Type::nonNull(Type::string()),
+              'name' => Type::nonNull(Type::string()),
+            ],
+          ])),
+          'resolve' => function () {
+            $categoryModel = new \App\Model\Category();
+            return $categoryModel->getAll();
+          },
         ],
+
         'products' => [
           'type' => Type::listOf(self::getProductType()),
           'args' => [
