@@ -37,6 +37,23 @@ class QueryResolver
         'id' => Type::nonNull(Type::string()),
         'name' => Type::nonNull(Type::string()),
         'price' => Type::nonNull(Type::float()),
+        'in_stock' => Type::nonNull(Type::boolean()),
+        'description' => Type::string(),
+        'category' => [
+          'type' => Type::nonNull(Type::string()),
+          'resolve' => function ($product) {
+            $categoryModel = new Category();
+            $category = $categoryModel->getById($product['category_id']);
+            return $category['name'] ?? null;
+          },
+        ],
+        'gallery' => [
+          'type' => Type::listOf(Type::string()),
+          'resolve' => function ($product) {
+            // Decode the gallery JSON from the database (if it exists)
+            return $product['gallery'] ? json_decode($product['gallery']) : [];
+          },
+        ],
         'attributes' => [
           'type' => Type::listOf(self::getAttributeType()),
         ],
