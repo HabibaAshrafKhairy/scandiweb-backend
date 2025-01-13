@@ -18,7 +18,7 @@ class QueryResolver
           'type' => Type::listOf(new ObjectType([
             'name' => 'Category',
             'fields' => [
-              'id' => Type::nonNull(Type::string()),
+              'id' => Type::nonNull(Type::int()),
               'name' => Type::nonNull(Type::string()),
             ],
           ])),

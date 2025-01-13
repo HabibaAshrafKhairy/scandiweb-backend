@@ -10,7 +10,7 @@ class Category extends AbstractModel
     return $stmt->fetchAll(\PDO::FETCH_ASSOC);
   }
 
-  public function getById(string $id): ?array
+  public function getById(int $id): ?array
   {
     $stmt = $this->pdo->prepare('SELECT * FROM categories WHERE id = :id');
     $stmt->execute(['id' => $id]);
