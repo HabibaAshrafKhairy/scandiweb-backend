@@ -1,4 +1,14 @@
 <?php
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200); // Send HTTP 200 OK
+    exit();
+}
+
 require_once __DIR__ . '/../vendor/autoload.php';
 ini_set("log_errors", 1);
 ini_set("error_log", "/tmp/php-error.log");
