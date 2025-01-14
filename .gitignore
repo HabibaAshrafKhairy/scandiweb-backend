@@ -4,9 +4,6 @@
 # PHPStorm or other IDE config files
 /.idea/
 
-# Composer lock file - if you don't want to lock dependencies to a specific version (optional)
-composer.lock
-
 # PHPUnit
 /phpunit-result.xml
 
