@@ -1,5 +1,7 @@
 <?php
 
+require_once '../EnvLoader.php';
+
 use App\EnvLoader;
 
 $env = new EnvLoader();
