@@ -1,9 +1,13 @@
 <?php
+
+use App\EnvLoader;
+
+$env = new EnvLoader();
 // Database connection configuration
-$host = 'db';
-$db = 'scandiweb';
-$user = 'root';
-$pass = 'yourpassword';
+$host = $env->dbHost;
+$db = $env->dbName;
+$user = $env->dbUser;
+$pass = $env->dbPass;
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;charset=$charset";

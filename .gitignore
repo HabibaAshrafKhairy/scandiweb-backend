@@ -17,3 +17,4 @@ Thumbs.db  # Windows
 mysql-data
 
 
+.env*

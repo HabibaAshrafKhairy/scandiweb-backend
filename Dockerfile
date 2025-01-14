@@ -23,5 +23,9 @@ RUN a2enmod rewrite
 # Set the working directory inside the container
 WORKDIR /var/www/html
 
+COPY . .
+
+RUN composer install
+
 # Expose the default Apache port
 EXPOSE 80
