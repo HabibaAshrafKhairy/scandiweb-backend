@@ -38,46 +38,4 @@ class Attribute extends AbstractModel
 
     return array_values($attributes);
   }
-
-  public function getByOrderItem(array $orderItem): array
-  {
-    // Assuming $selectedAttributeIds is the string "[23,25,27]"
-    $selectedAttributeIds = json_decode($orderItem['selected_attributes'], true);
-
-    // Check the decoded result
-    error_log('Decoded selected attribute IDs: ' . json_encode($selectedAttributeIds));
-
-
-    // Check if the array is not empty before proceeding
-    if (empty($selectedAttributeIds)) {
-      error_log('No selected attributes found for order item: ' . json_encode($orderItem));
-      return [];
-    }
-
-
-
-    // Fetch attribute items based on their IDs
-    $sql = '
-SELECT ai.value, a.name
-FROM attribute_items ai
-JOIN attributes a ON ai.attribute_id = a.id
-WHERE ai.id IN (' . implode(',', array_map('intval', $selectedAttributeIds)) . ')
-';
-    error_log('Executing query: ' . $sql);
-
-    $stmt = $$this->pdo->prepare($sql);
-    if (!$stmt->execute()) {
-      error_log('Failed to execute query: ' . implode(' ', $stmt->errorInfo()));
-    }
-
-    $stmt->execute();
-    $result = $stmt->fetchAll();
-    error_log('Fetched selected attributes: ' . json_encode($result));
-    if (empty($result)) {
-      error_log('No selected attributes found for IDs: ' . json_encode($selectedAttributeIds));
-    }
-
-
-    return json_encode($result);
-  }
 }
