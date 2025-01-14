@@ -41,9 +41,6 @@ class Attribute extends AbstractModel
 
   public function getByOrderItem(array $orderItem): array
   {
-    error_log('Resolving selected_attributes for order item: ' . json_encode($orderItem));  // Log this to check if it's triggered
-
-
     // Assuming $selectedAttributeIds is the string "[23,25,27]"
     $selectedAttributeIds = json_decode($orderItem['selected_attributes'], true);
 
@@ -75,7 +72,7 @@ WHERE ai.id IN (' . implode(',', array_map('intval', $selectedAttributeIds)) . '
 
     $stmt->execute();
     $result = $stmt->fetchAll();
-    error_log('Fetched selected attributes: ' . json_encode($result)); // Log query result
+    error_log('Fetched selected attributes: ' . json_encode($result));
     if (empty($result)) {
       error_log('No selected attributes found for IDs: ' . json_encode($selectedAttributeIds));
     }

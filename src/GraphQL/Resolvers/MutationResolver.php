@@ -7,7 +7,7 @@ use App\Model\Order;
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use GraphQL\Schema;
+
 
 class MutationResolver
 {
@@ -22,7 +22,6 @@ class MutationResolver
         'selected_attribute_item_ids' => Type::nonNull(Type::listOf(Type::int())),
       ],
     ]);
-
 
     $orderItemType = new ObjectType([
       'id' => Type::nonNull(Type::int()),

@@ -43,7 +43,6 @@ VALUES (:order_id, :product_id, :quantity, :price, :selected_attributes)
 
       // Fetch items for the order
       $stmt = $this->pdo->prepare('SELECT * FROM order_items WHERE order_id = :order_id');
-      // $stmt = $this->pdo->prepare('SELECT *, a.* FROM order_items oi INNER JOIN attribute_items a ON JSON_CONTAINS (oi.selected_attributes, JSON_ARRAY (a.id)) WHERE order_id = :order_id');
       $stmt->execute(['order_id' => $orderId]);
       $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -51,7 +50,7 @@ VALUES (:order_id, :product_id, :quantity, :price, :selected_attributes)
       foreach ($items as &$item) {
         $selectedAttributeIds = json_decode($item['selected_attributes'], true);
 
-        // Log selected attribute IDs
+
 
         if (empty($selectedAttributeIds)) {
           $item['selected_attributes'] = [];
@@ -71,9 +70,6 @@ VALUES (:order_id, :product_id, :quantity, :price, :selected_attributes)
       }
       $order['items'] = $items;
 
-      // print_r('in order model 2' . json_encode($order));
-
-      // Log the final order response
 
       return $order;
     } catch (Throwable $e) {

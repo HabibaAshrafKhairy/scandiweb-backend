@@ -1,8 +1,8 @@
 <?php
-$host = 'db';  // Use the name of the MySQL service from docker-compose.yml
-$db = 'scandiweb'; // Your database name
-$user = 'root';    // Your MySQL username
-$pass = 'yourpassword'; // Your MySQL password
+$host = 'db';
+$db = 'scandiweb';
+$user = 'root';
+$pass = 'yourpassword';
 $charset = 'utf8mb4';
 
 
@@ -25,7 +25,7 @@ if (file_exists('data_inserted.txt')) {
 }
 
 // Load the JSON file
-$jsonData = file_get_contents('data.json'); // Place the data.json file in the same directory
+$jsonData = file_get_contents('data.json');
 $data = json_decode($jsonData, true);
 
 echo "Inserting categories...\n";
