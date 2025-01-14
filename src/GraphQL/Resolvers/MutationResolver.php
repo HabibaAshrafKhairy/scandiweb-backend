@@ -34,6 +34,7 @@ class MutationResolver
           'fields' => [
             'name' => Type::nonNull(Type::string()),
             'value' => Type::nonNull(Type::string()),
+            'display_value' => Type::nonNull(Type::string()),
           ],
         ])),
       ],

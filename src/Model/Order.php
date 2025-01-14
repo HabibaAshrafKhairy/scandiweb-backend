@@ -60,7 +60,7 @@ VALUES (:order_id, :product_id, :quantity, :price, :selected_attributes)
 
 
         $stmt = $this->pdo->prepare('
-          SELECT ai.value, a.name
+          SELECT ai.value, a.name, ai.display_value
           FROM attribute_items ai
           JOIN attributes a ON ai.attribute_id = a.id
           WHERE ai.id IN (' . implode(',', array_map('intval', $selectedAttributeIds)) . ')
