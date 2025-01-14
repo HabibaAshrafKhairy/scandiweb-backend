@@ -29,3 +29,8 @@ RUN composer install
 
 # Expose the default Apache port
 EXPOSE 80
+
+ARG DB_HOST=db
+ARG DB_NAME=scandiweb
+ARG DB_USER=root
+ARG DB_PASS=yourpassword
