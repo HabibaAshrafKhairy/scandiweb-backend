@@ -19,6 +19,12 @@ Run the following command to attach to a bash shell inside the container:
 docker exec -it php-apache bash
 ```
 
+Run the following command to install composer dependencies:
+
+```
+composer install
+```
+
 Run the following command to navigate to the database migration/seed files directory:
 
 ```
