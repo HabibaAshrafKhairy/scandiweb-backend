@@ -25,8 +25,17 @@ class Order extends AbstractModel
       $values = [];
       $placeholders = [];
       foreach ($args['items'] as $item) {
-        $selectedAttributes = json_encode($item['selected_attribute_item_ids']);
-        $attributeIds = array_merge($attributeIds, $item['selected_attribute_item_ids']);
+        // If there are no attributes, set selected_attributes as empty JSON
+        $selectedAttributes = empty($item['selected_attribute_item_ids'])
+          ? '[]'
+          : json_encode($item['selected_attribute_item_ids']);
+
+        // If the item has attributes, merge them into the attributeIds array
+        if (!empty($item['selected_attribute_item_ids'])) {
+          $attributeIds = array_merge($attributeIds, $item['selected_attribute_item_ids']);
+        }
+
+        // Add the item to the batch insert values
         $values = array_merge($values, [
           $orderId,
           $item['product_id'],
@@ -43,23 +52,25 @@ class Order extends AbstractModel
       $stmt = $this->pdo->prepare($sql);
       $stmt->execute($values);
 
-      // Step 4: Fetch all required attributes in one query
-      $attributeIds = array_unique($attributeIds);
-      $placeholders = implode(',', array_fill(0, count($attributeIds), '?'));
-      $stmt = $this->pdo->prepare("
-            SELECT ai.id, ai.display_value AS display_value, a.name, ai.value
-            FROM attribute_items ai
-            JOIN attributes a ON ai.attribute_id = a.id
-            WHERE ai.id IN ($placeholders)
-        ");
-      $stmt->execute($attributeIds);
+      // Step 4: Fetch all required attributes in one query if there are any
       $attributesMap = [];
-      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $attribute) {
-        $attributesMap[$attribute['id']] = [
-          'value' => $attribute['value'],
-          'display_value' => $attribute['display_value'],
-          'name' => $attribute['name']
-        ];
+      if (!empty($attributeIds)) {
+        $attributeIds = array_unique($attributeIds);
+        $placeholders = implode(',', array_fill(0, count($attributeIds), '?'));
+        $stmt = $this->pdo->prepare("
+              SELECT ai.id, ai.display_value AS display_value, a.name, ai.value
+              FROM attribute_items ai
+              JOIN attributes a ON ai.attribute_id = a.id
+              WHERE ai.id IN ($placeholders)
+          ");
+        $stmt->execute($attributeIds);
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $attribute) {
+          $attributesMap[$attribute['id']] = [
+            'value' => $attribute['value'],
+            'display_value' => $attribute['display_value'],
+            'name' => $attribute['name']
+          ];
+        }
       }
 
       // Step 5: Fetch the order and items
@@ -74,9 +85,16 @@ class Order extends AbstractModel
       // Step 6: Resolve attributes for each item
       foreach ($items as &$item) {
         $selectedAttributeIds = json_decode($item['selected_attributes'], true);
-        $item['selected_attributes'] = array_map(function ($id) use ($attributesMap) {
-          return $attributesMap[$id] ?? ['display_value' => 'Unknown', 'name' => 'Unknown'];
-        }, $selectedAttributeIds);
+
+        // If there are attributes, resolve them
+        if (!empty($selectedAttributeIds)) {
+          $item['selected_attributes'] = array_map(function ($id) use ($attributesMap) {
+            return $attributesMap[$id] ?? ['display_value' => 'Unknown', 'name' => 'Unknown'];
+          }, $selectedAttributeIds);
+        } else {
+          // If no attributes, set it to empty array or some default value
+          $item['selected_attributes'] = [];
+        }
       }
       $order['items'] = $items;
 
