@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\GraphQL\Schema;
@@ -7,6 +9,11 @@ use GraphQL\Error\DebugFlag;
 use GraphQL\GraphQL as GraphQLBase;
 use RuntimeException;
 use Throwable;
+
+use function file_get_contents;
+use function header;
+use function json_decode;
+use function json_encode;
 
 class GraphQL
 {

@@ -1,7 +1,10 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+declare(strict_types=1);
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 // Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -11,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
+$dispatcher = FastRoute\simpleDispatcher(static function (FastRoute\RouteCollector $r) {
     $r->post('/graphql', [App\Controller\GraphQL::class, 'handle']);
 });
 
@@ -21,9 +24,6 @@ $routeInfo = $dispatcher->dispatch(
 );
 
 switch ($routeInfo[0]) {
-    case FastRoute\Dispatcher::NOT_FOUND:
-        // ... 404 Not Found
-        break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
         // ... 405 Method Not Allowed
